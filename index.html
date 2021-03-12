@@ -2,144 +2,244 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- CSS only -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="./styles.css">
-    <title>CourseWork 1</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="./styles.css">
+  <title>CourseWork 1</title>
 </head>
 
 <body>
 
-    <div id="app">
-        <div style="position:absolute; top: 0; right: 0;">
-            <button class="btn btn-primary">
-              {{lessonCount}}
-            <span class="bi bi-cart4"></span> Shopping Cart</button>
-        </div>
-        
-        <div v-if="showProduct">
-            <div class="container" style="margin-top: 80px;">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                              Subject
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                              Location
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                              Price
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                              Availability
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                              Ascending
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                              Descending
-                            </label>
-                          </div>
+  <div id="app">
+    <div style="position:absolute; top: 0; right: 0;">
+      <button class="btn btn-primary" v-if='lessonCount >= 1' v-on:click="changePage('cart')">
+        {{lessonCount}}
+        <span class="bi bi-cart4"></span> Shopping Cart</button>
+      <button v-else style="visibility: hidden;"></button>
+    </div>
+
+    <div>
+      <div class="container" style="margin-top: 80px;" v-if="page === 'lesson'">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-check">
+              <input class="form-check-input" v-model="categorySelected" value="subject" type="radio"
+                name="flexRadioDefault" id="flexRadioDefault1">
+              <label class="form-check-label" for="flexRadioDefault1">
+                Subject
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" v-model="categorySelected" value="location" type="radio"
+                name="flexRadioDefault" id="flexRadioDefault1">
+              <label class="form-check-label" for="flexRadioDefault1">
+                Location
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" v-model="categorySelected" value="price" type="radio"
+                name="flexRadioDefault" id="flexRadioDefault1">
+              <label class="form-check-label" for="flexRadioDefault1">
+                Price
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" v-model="categorySelected" value="spaces" type="radio"
+                name="flexRadioDefault" id="flexRadioDefault1">
+              <label class="form-check-label" for="flexRadioDefault1">
+                Availability
+              </label>
+            </div>
+            <button class="btn btn-primary">Ascending</button>
+            <button class="btn btn-primary">Descending</button>
+          </div>
+
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-md-4" v-for="(lesson, index) in allSorted">
+                <div>
+                  <div class="card changeCard">
+                    <div class="lesson">
+                      <div class="lesson-details">
+                        <p class="lesson-name">Subject: {{ lesson.subject }}</p>
+                        <p>Location: {{ lesson.location }}</p>
+                        <p>Price: {{ lesson.price }}</p>
+                        <p>Number of Spaces: <span >
+                            {{ lesson.spaces }}
+                          </span></p>
+                      </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" fill="currentColor"
+                        class="bi bi-pen" viewBox="0 0 16 16">
+                        <path
+                          d="M13.498.795l.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
+                      </svg>
                     </div>
 
-                    <div class="col-md-9">
-                        <div class="row">
-                          <div class="col-md-4" v-for="lesson in lessons">
-                            <div >
-                              <div class="card changeCard">
-                                  <div class="lesson">
-                                      <div class="lesson-details">
-                                          <p class="lesson-name">Subject: {{ lesson.subject }}</p>
-                                          <p>Location: {{ lesson.location }}</p>
-                                          <p>Price: {{ lesson.price }}</p>
-                                          <p>Number of Spaces: <span v-if="lesson.spaces - lessonCartCount(lesson.id) >= 0">
-                                            {{lesson.spaces - lessonCartCount(lesson.id)}}
-                                          </span></p>
-                                      </div>
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px"
-                                          fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
-                                          <path
-                                              d="M13.498.795l.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
-                                      </svg>
-                                  </div>
-  
-                                  <button class="btn btn-primary" v-on:click="addToCart(lesson)" v-if='canAddToCart(lesson)'>Add ToCart</button>
-                                  <button class="btn btn-primary" style="cursor: none;" disabled v-else>Add ToCart</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                    </div>
+                    <button class="btn btn-primary" v-on:click="addToCart(lesson, index)" v-if='canAddToCart(lesson)'>Add
+                      ToCart</button>
+                    <button class="btn btn-primary" style="cursor: none;" disabled v-else>Add ToCart</button>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-        <div v-else style="margin-top: 80px;">
-            <h1>dfhgdhfgdhfgdh</h1>
-        </div>
+      </div>
     </div>
-    <script src="lessons.js"></script>
-    <script src="https://unpkg.com/vue"></script>
-    <script>
-        var school = new Vue({
-            el: '#app',
-            data: {
-                lessons: lessons,
-                cart:[],
-                showProduct: true,
-            },
-            methods:{
-              //add to lesson to the cart array
-              addToCart(lesson){
-                this.cart.push(lesson.id)
-              },
-              //to figure the amount of space in the each array
-              lessonCartCount(id){
-                let count = 0;
-                for (let i = 0; i < this.cart.length; i++) {
-                  if(this.cart[i] === id){
-                    count++;
-                  }      
-                }
-                return count;
-              },
-              //to check number of spaces remaining
-              canAddToCart(lesson){
-                return lesson.spaces > this.lessonCartCount(lesson.id);
+    <div style="margin-top: 80px;" v-if="page === 'cart'">
+      <div style="position:absolute; top: 0; left: 0;">
+        <button class="btn btn-primary" v-on:click="changePage('lesson')">Lesson Page</button>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6" v-for="lesson in cart">
+            <div>
+              <div class="card changeCard">
+                <div class="lesson">
+                  <div class="lesson-details">
+                    <p class="lesson-name">Subject: {{ lesson.subject }}</p>
+                    <p>Location: {{ lesson.location }}</p>
+                    <p>Price: {{ lesson.price }}</p>
+                    <p>Number of Spaces:{{lesson.spaces}}</p>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" fill="currentColor"
+                    class="bi bi-pen" viewBox="0 0 16 16">
+                    <path
+                      d="M13.498.795l.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
+                  </svg>
+                </div>
+                <button class="btn btn-primary" v-on:click="removeLesson">Remove Lesson</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-4">
+            <p>
+              <strong>First Name: </strong>
+              <input type="text" class="form-control" placeholder="Name">
+            </p>
+          </div>
+          <div class="col-md-4">
+            <p>
+              <strong>Phone Number: </strong>
+              <input type="number" class="form-control" placeholder="PhoneNumber">
+            </p>
+          </div>
+          <div class="col-md-4">
+            <button class="btn btn-primary" v-on:click="checkOut">Check Out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="lessons.js"></script>
+  <script src="https://unpkg.com/vue"></script>
+  <script>
+    var school = new Vue({
+      el: '#app',
+      data: {
+        lessons: lessons,
+        cart: [],
+        categorySelected: 'subject',
+        page: "lesson"
+      },
+      methods: {
+        //add to lesson to the cart array
+        addToCart(lesson, index) {
+          this.cart.push(lesson)
+          this.allSorted[index].spaces--;
+        },
+        //to check number of spaces remaining
+        canAddToCart(lesson) {
+          return lesson.spaces > 0;
+        },
+        //navigate to the other screen
+        changePage(page) {
+          this.page = page;
+        },
+        //remove lesson
+        removeLesson(lesson) {
+          this.cart.splice(this.cart.indexOf(lesson));
+        },
+        //Alert
+        checkOut() {
+          alert('Order submitted!')
+        },
+      },
+      computed: {
+        //to display the amount of every id entering the array
+        lessonCount() {
+          return this.cart.length;
+        },
+        //sort
+        allSorted() {
+          //binding the selected radioButton to the category selected
+          let category = this.categorySelected;
+          //sort by subject
+          let subject = this.lessons.slice(0);
+          if (category === "subject") {
+            function compare(a, b) {
+              if (a.subject > b.subject)
+                return 1;
+              if (a.subject < b.subject)
+                return -1;
+              return 0;
+            }
+            return subject.sort(compare);
+          } else {
+            //sort by location
+            let location = this.lessons.slice(0);
+            if (category === "location") {
+              function compare(a, b) {
+                if (a.location > b.location)
+                  return 1;
+                if (a.location < b.location)
+                  return -1;
+                return 0;
               }
-            },
-            computed:{
-              //to display the amount of every id entering the array
-              lessonCount(){
-                return this.cart.length || '';
+              return location.sort(compare);
+            } else {
+              //sort by price
+              let price = this.lessons.slice(0);
+              if (category === "price") {
+                function compare(a, b) {
+                  if (a.price > b.price)
+                    return 1;
+                  if (a.price < b.price)
+                    return -1;
+                  return 0;
+                }
+                return price.sort(compare);
+              } else {
+                //sort by availability
+                let spaces = this.lessons.slice(0);
+                if (category === "spaces") {
+                  function compare(a, b) {
+                    if (a.spaces > b.spaces)
+                      return 1;
+                    if (a.spaces < b.spaces)
+                      return -1;
+                    return 0;
+                  }
+                  return spaces.sort(compare);
+                }
               }
             }
-        })
-    </script>
-    <!-- JavaScript Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
-    </script>
+          }
+        }
+      },
+    })
+  </script>
+  <!-- JavaScript Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous">
+  </script>
 </body>
 
 </html>
