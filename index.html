@@ -164,12 +164,9 @@
           this.page = page;
         },
         //remove lesson
-        removeLesson(lesson) {
-          this.cart.splice(this.cart.indexOf(lesson));
-        },
         //Alert
         checkOut() {
-          alert('Order submited!')
+          alert('Order submitted!')
         },
       },
       computed: {
@@ -217,7 +214,7 @@
                 }
                 return price.sort(compare);
               } else {
-                //sort by availability
+                //sort by spaces
                 let spaces = this.lessons.slice(0);
                 if (category === "spaces") {
                   function compare(a, b) {
