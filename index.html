@@ -54,8 +54,20 @@
                 Availability
               </label>
             </div>
-            <button class="btn btn-primary">Ascending</button>
-            <button class="btn btn-primary">Descending</button>
+            <br>
+
+            <div class="form-check">
+              <input class="form-check-input" v-model="OrderBy" value="asc" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+              <label class="form-check-label" for="exampleRadios1">
+                Asc
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" v-model="OrderBy" value="dsc" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+              <label class="form-check-label" for="exampleRadios2">
+                Second default radio
+              </label>
+            </div>
           </div>
 
           <div class="col-md-9">
@@ -104,7 +116,7 @@
                     <p class="lesson-name">Subject: {{ lesson.subject }}</p>
                     <p>Location: {{ lesson.location }}</p>
                     <p>Price: {{ lesson.price }}</p>
-                    <p>Number of Spaces:{{lesson.spaces}}</p>
+                    <p>Number of Spaces:{{ lesson.spaces }}</p>
                   </div>
                   <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" fill="currentColor"
                     class="bi bi-pen" viewBox="0 0 16 16">
@@ -149,7 +161,8 @@
         categorySelected: 'subject',
         page: "lesson",
         terms: "",
-        term: ""
+        term: "",
+        OrderBy: "",
       },
       methods: {
         //add to lesson to the cart array
@@ -179,6 +192,7 @@
         lessonCount() {
           return this.cart.length;
         },
+        //activate button after inputting
         isDisabled(){
           return !this.terms || !this.term;
         },
@@ -186,14 +200,17 @@
         allSorted() {
           //binding the selected radioButton to the category selected
           let category = this.categorySelected;
+          const orderBy = this.OrderBy;
+          console.log(orderBy)
           //sort by subject
           let subject = this.lessons.slice(0);
           if (category === "subject") {
+            console.log('in subject compare sorting by: ' + orderBy)
             function compare(a, b) {
               if (a.subject > b.subject)
-                return 1;
+                return orderBy == 'asc' ? 1 : (orderBy == 'dsc' ? -1 : 1)
               if (a.subject < b.subject)
-                return -1;
+                return orderBy == 'asc' ? -1 : (orderBy == 'dsc' ? 1 : -1)
               return 0;
             }
             return subject.sort(compare);
@@ -203,9 +220,9 @@
             if (category === "location") {
               function compare(a, b) {
                 if (a.location > b.location)
-                  return 1;
+                  return orderBy == 'asc' ? 1 : (orderBy == 'dsc' ? -1 : 1)
                 if (a.location < b.location)
-                  return -1;
+                  return orderBy == 'asc' ? -1 : (orderBy == 'dsc' ? 1 : -1)
                 return 0;
               }
               return location.sort(compare);
@@ -215,9 +232,9 @@
               if (category === "price") {
                 function compare(a, b) {
                   if (a.price > b.price)
-                    return 1;
+                    return orderBy == 'asc' ? 1 : (orderBy == 'dsc' ? -1 : 1)
                   if (a.price < b.price)
-                    return -1;
+                    return orderBy == 'asc' ? -1 : (orderBy == 'dsc' ? 1 : -1)
                   return 0;
                 }
                 return price.sort(compare);
@@ -227,9 +244,9 @@
                 if (category === "spaces") {
                   function compare(a, b) {
                     if (a.spaces > b.spaces)
-                      return 1;
+                      return orderBy == 'asc' ? 1 : (orderBy == 'dsc' ? -1 : 1)
                     if (a.spaces < b.spaces)
-                      return -1;
+                      return orderBy == 'asc' ? -1 : (orderBy == 'dsc' ? 1 : -1)
                     return 0;
                   }
                   return spaces.sort(compare);
